@@ -1,0 +1,25 @@
+# R session files
+.Rhistory
+.RData
+.Rproj.user/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Data: never commit
+data/*
+!data/README.md
+!data/.gitkeep
+
+# Outputs
+output/
+
+# Personal config -- never commit
+config.R
+
+# renv (keep renv.lock and activate script; ignore the library)
+renv/library/
+renv/local/
+renv/python/
+renv/staging/
