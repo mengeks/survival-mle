@@ -6,6 +6,49 @@ Repository: <https://github.com/mengeks/survival-mle>
 
 ---
 
+## Incremental simulation demo
+
+This workshop demo generates synthetic right-censored cohorts. It compares
+Kaplan–Meier, an exponential survival model, and a Nelson–Aalen survival
+estimate at two months. The original data analysis is described below.
+
+Install the simulation dependencies once if needed:
+
+```sh
+Rscript --vanilla -e 'install.packages(c("survival", "yaml", "digest", "jsonlite"), repos = "https://cloud.r-project.org")'
+```
+
+Run the three steps from the repo root. They use the same result directory.
+
+```sh
+bash experiments/run_experiment.sh
+bash experiments/run_experiment.sh --config configs/add_size.yaml --sample-size 150
+bash experiments/run_experiment.sh --config configs/add_method.yaml --method method_c
+Rscript --vanilla scripts/summarize.R --config configs/add_method.yaml
+```
+
+The size override adds 150 patients to the original grid of 50 and 100.
+The method override inherits that expanded grid and adds the new method in
+`R/simulation-methods/method_c.R`. The summary validates the entire grid
+before writing `output/simulation/summary.csv` and `replicates.csv`.
+The `runs/` subfolder records the resolved configurations and counts; cohort
+and method records have their own identities and checksums.
+
+A clean full run can use the final config directly:
+
+```sh
+bash experiments/run_experiment.sh --config configs/add_method.yaml
+Rscript --vanilla scripts/summarize.R --config configs/add_method.yaml
+```
+
+Use `--out /path/to/results` on both commands to build in a separate directory.
+For a short check of actual cache reuse, rejection of a missing fit, and
+agreement with the clean full run:
+
+```sh
+bash tests/check_incremental_simulation.sh
+```
+
 ## Setup
 
 1. Clone the repo and open `survival-mle.Rproj` in RStudio.
